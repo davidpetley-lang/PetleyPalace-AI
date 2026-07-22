@@ -1,0 +1,13 @@
+.env
+.n8n-encryption-key
+
+data/
+
+backups/
+
+__pycache__/
+*.pyc
+
+.venv/
+
+.DS_Store
