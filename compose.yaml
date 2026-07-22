@@ -30,6 +30,7 @@ services:
 
     volumes:
       - ./memory:/data/memory:ro
+      - ./data/proposals:/data/proposals
 
     networks:
       - petley-ai

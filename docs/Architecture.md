@@ -1,122 +1,69 @@
 # Petley Palace AI Architecture
 
-## Guiding principle
+## Overview
 
-David owns the memory. Models borrow it.
+Petley Palace AI is a self-hosted personal AI platform built around a central service called Petley Core.
 
-## Components
+Petley Core provides memory access, project data, approval workflows, integrations, and tool routing for AI models and user interfaces.
+
+The main design principle is:
+
+> David owns the memory. Models borrow it.
+
+AI models may search and use memory, but permanent changes require approval.
+
+---
+
+## Core Components
+
+### Petley Core
+
+Petley Core is a FastAPI service responsible for:
+
+- Reading persistent memory
+- Searching memory
+- Listing projects
+- Managing memory proposals
+- Exposing tools through an HTTP API
+- Coordinating future skills and integrations
+- Enforcing permissions and approval rules
+
+Petley Core is the authoritative application layer.
 
 ### Open WebUI
 
-The main conversational interface.
+Open WebUI is the user-facing chat interface.
 
-Responsibilities:
+It does not own permanent memory or project state.
 
-- Display conversations
-- Connect to local and cloud models
-- Expose approved Petley Palace tools
-- Ask for confirmation before permanent memory changes
+It may call Petley Core tools to:
 
-### Petley Palace API
+- Search memory
+- Retrieve projects
+- Create memory proposals
+- Access approved skills
 
-The stable interface between Open WebUI, memory and workflows.
+### Ollama
 
-Responsibilities:
+Ollama runs local language models.
 
-- Search local memory
-- Propose memory changes
-- Commit approved changes
-- Expose project state
-- Call n8n workflows
-- Apply authentication and audit logging
-- Return consistent structured responses
+Models are interchangeable and should not contain authoritative permanent memory.
 
 ### n8n
 
-The workflow and integration engine.
+n8n provides workflow automation and orchestration.
 
-Responsibilities:
+It may call Petley Core APIs and external services, but permanent memory changes must still pass through the Petley Core approval workflow.
 
-- Home Assistant workflows
-- Gmail workflows
-- Google Calendar workflows
-- Plex workflows
-- UniFi workflows
-- Scheduled jobs
-- Deterministic automations
+### Memory
 
-### Models
+Memory is stored as human-readable files under:
 
-Models are replaceable reasoning providers.
-
-Initial providers:
-
-- Ollama local models
-- Cloud models added later
-
-Models do not own memory.
-
-### Agents
-
-Agents are optional specialists for bounded multi-step tasks.
-
-Examples:
-
-- Research
-- Coding
-- Planning
-
-Agents do not directly modify permanent memory without approval.
-
-## Memory classes
-
-### Profile
-
-Long-lived information:
-
-- Identity
-- Health
-- Work
-- Preferences
-- Home
-
-### Projects
-
-Living project summaries containing:
-
-- Objective
-- Current status
-- Decisions
-- Open actions
-- Relevant systems and documents
-- Last updated date
-
-### Timeline
-
-Important dated events and changes.
-
-### Working memory
-
-Temporary context with an expiry or review date.
-
-### Archive
-
-Completed projects and superseded information.
-
-## Memory change process
-
-1. The assistant notices a possible lasting change.
-2. It creates a proposed memory update.
-3. David reviews the proposal.
-4. The proposal is approved, edited or rejected.
-5. Approved changes are written locally.
-6. An audit entry records what changed and when.
-
-## Security rules
-
-- No public exposure by default.
-- Credentials remain in n8n or protected environment files.
-- Models never receive raw credentials.
-- Memory tools are read-only unless an explicit approval operation is used.
-- Every permanent memory change is auditable.
-- External models receive only relevant retrieved context.
+```text
+memory/
+├── archive/
+├── profile/
+├── projects/
+├── timeline/
+├── working/
+└── proposals/
