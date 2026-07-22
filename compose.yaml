@@ -19,6 +19,21 @@ services:
     networks:
       - petley-ai
 
+  petley-core:
+    build:
+      context: ./services/petley-core
+    container_name: petley-core
+    restart: unless-stopped
+
+    ports:
+      - "192.168.1.13:8000:8000"
+
+    volumes:
+      - ./memory:/data/memory:ro
+
+    networks:
+      - petley-ai
+
 networks:
   petley-ai:
     name: petley-ai
