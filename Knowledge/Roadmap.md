@@ -65,8 +65,19 @@ milestone carries an ID + state.
   Evaluate hosting the Knowledge base on the UNAS rather than only in git, for
   resilience/discoverability. Open from earlier Backup work.
 
+- **RP-0009 — Hermes secrets-file permission hardening** `deferred`
+  Tighten the WhatsApp `session/` directory and generated QR artefacts
+  (`latest_qr.json`, `whatsapp_pair_qr.png`) from world-readable
+  (644/755) to `600`, matching the already-correct `.env` / `.env.bak` /
+  `auth.json` / `config.yaml`.
+  **Deferred:** review alongside the wider Hermes security model; first
+  understand how Hermes *creates and manages* these files before changing
+  permissions. Do NOT add a chmod guard yet.
+
 ## Roadmap changelog
 
+- **v0.2** (2026-07-25): added RP-0009 (deferred Hermes secrets-file
+  permission hardening) as a security-review follow-up task.
 - **v0.1** (2026-07-25): initial draft. Seeded from completed work
   (Backup v0.2.1, Comms v1.3.0, Knowledge foundation), active Storage/UNAS
   project, and planned Immich / Hermes-bridge / KB-scaling work.
